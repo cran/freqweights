@@ -1,9 +1,12 @@
 \name{hclustvfreq}
+\alias{.hclustvfreq}
 \alias{hclustvfreq}
 \title{Fast hierarchical, agglomerative clustering of frequency data}
 \usage{
-hclustvfreq(data, freq = ~freq, method = "single", metric = "euclidean",
+hclustvfreq(data, freq = NULL, method = "single", metric = "euclidean",
   p = NULL)
+
+.hclustvfreq(tfq, method = "single", metric = "euclidean", p = NULL)
 }
 \arguments{
   \item{data}{any object that can be coerced into a double
@@ -23,6 +26,8 @@ hclustvfreq(data, freq = ~freq, method = "single", metric = "euclidean",
   \code{"minkowski"}}
 
   \item{p}{parameter for the Minkowski metric.}
+
+  \item{tfq}{a frequency table}
 }
 \description{
 This function implements a version of the hierarchical,
@@ -33,29 +38,25 @@ of frequencies.
 \details{
 Any variables in the formula are removed from the data set.
 
-This function is an adaptation of
+This function is a wrapper of
 \code{\link[fastcluster]{hclust.vector}} to be used with
-tables of frequencies.
+tables of frequencies. It use the frequency weights as
+parameter \code{members}.
 }
 \examples{
 library(dplyr)
 library(fastcluster)
 
 data <- iris[,1:3,drop=FALSE]
-aa <- hclust.vector(data)
-af <- hclustvfreq(data, freq=~1)
-all.equal(af, aa) # Equals except in some fields
+hc <- hclustvfreq(data, method="centroid",metric="euclidean")
+cutree(hc,3) ## Different length than data
 
-data$group <- cutree(aa,3)
-
-tt <- tablefreq(data)
-bb <- hclustvfreq(tt)
-tt$group <- cutree(bb,3)
-
-all.equal(unique(tt[,-ncol(tt)]),unique(data))
+tfq <- tablefreq(iris[,1:3])
+hc <- .hclustvfreq(tfq, method="centroid",metric="euclidean")
+tfq$group <- cutree(hc,3)
 }
 \seealso{
 \code{\link[fastcluster]{hclust.vector}},
-\code{\link{smartround}}
+\code{link{tablefreq}}
 }
 

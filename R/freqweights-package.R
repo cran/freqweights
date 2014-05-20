@@ -11,8 +11,8 @@
 ##' \tabular{ll}{
 ##' Package: \tab freqweights\cr
 ##' Type: \tab Package\cr
-##' Version: \tab 0.0.1\cr
-##' Date: \tab 2014-04-04\cr
+##' Version: \tab 0.1.0\cr
+##' Date: \tab 2014-05-20\cr
 ##' License: \tab GPL 3.0\cr }
 ##' 
 ##' @name freqweights-package
@@ -24,12 +24,7 @@
 ##' 
 ##' @keywords package
 ##' @examples
-##' 
 ##' tablefreq(iris)
 ##' lmfreq(Sepal.Length ~ Petal.Length, tablefreq(iris))
 ##' hclustvfreq(tablefreq(iris[,1:4]))
-##' smartround(iris[,1:4],7,short=TRUE)
 NULL
-
-
-

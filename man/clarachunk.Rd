@@ -59,7 +59,9 @@ if(require(cluster)){
 
   subclusters <- list(clus1, clus2)
   b <- claramerge(subclusters,k)
-  print(b$medoids)
+     print(b$medoids)
+
+   print(nrow(b$tablefreq))
   print(b$tablefreq)
 }
 }

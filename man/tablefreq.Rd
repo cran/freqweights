@@ -3,72 +3,103 @@
 \alias{update.tablefreq}
 \title{Create a table of frequencies}
 \usage{
-tablefreq(data, vars = NULL, freq = ~1)
+tablefreq(tbl, vars = NULL, freq = NULL)
 
 \method{update}{tablefreq}(object, ...)
 }
 \arguments{
-  \item{data}{an object that can be coerced as a matrix or
-  a data frame.  It must contain all variables in
-  \code{vars} and in \code{freq}}
+  \item{tbl}{an object that can be coerced to a
+  \code{\link[dplyr]{tbl}}.  It must contain all variables
+  in \code{vars} and in \code{freq}}
 
   \item{vars}{variables to count unique values of. It may
-  be a numeric vector or character vector}
+  be a character vector}
 
-  \item{freq}{a one-sided, single term formula specifying
-  frequency weights}
+  \item{freq}{a name of a variable of the tbl object
+  specifying frequency weights. See Details}
 
   \item{object}{a \code{tablefreq} object}
 
   \item{...}{more data}
 }
 \value{
-A data frame or matrix with label and freq columns. When it
-is possible, the last column is named \code{freq} and it
-represents the frequency counts of the cases. This object
-of class \code{tablefreq}, has two attributes:
-\item{freq}{Formula used to create the frequency table}
-\item{colweights}{Name of the column with the weighting
-counts}
+A \code{\link[dplyr]{tbl}} object a with label and freq
+columns. When it is possible, the last column is named
+\code{freq} and it represents the frequency counts of the
+cases. This object of class \code{tablefreq}, has two
+attributes: \item{freq}{the weighting variable used to
+create the frequency table} \item{colweights}{Name of the
+column with the weighting counts}
 }
 \description{
 Create a table of frequencies
 }
 \details{
 Based on the \code{\link[plyr]{count}} function, it can
-natively work with matrices and may be updated.
+also work with matrices or external data bases and the
+result may be updated.
 
 It creates a frequency table of the \code{data}, or just of
-the columns specified in \code{vars}. If you provide a
-\code{freq} formula, the cases are weighted by the result
-of the formula. Any variables in the formula are removed
-from the data set.
+the columns specified in \code{vars}.
 
-See \code{\link[plyr]{count}} for further information.
-\code{\link[plyr]{count}} uses data frames;
-\code{tablefreq} also works with matrices.
+If you provide a \code{freq} formula, the cases are
+weighted by the result of the formula. Any variables in the
+formula are removed from the data set. If the data set is a
+matrix, the \code{freq} formula is a classic R formula.
+Otherwise, the expresion of \code{freq} is treated as a
+mathematical expression.
+
+This function uses all the power of
+\code{\link[dplyr]{dplyr}} to create frequency tables. The
+main advantage of this function is that it works with
+on-disk data stored in data bases, whereas
+\code{\link[plyr]{count}} only works with in-memory data
+sets.
+
+In general, in order to use the functions of this package,
+the frequency table obtained by this function should fit in
+memory. Otherwise you must use the 'chunk' versions
+(\code{link{clarachunk}}, \code{link{biglmfreq}}).
+
+The code of this function are adapted from a wish list of
+the devel page of \code{\link[dplyr]{dplyr}} (See
+references). Prof. Wickham also provides a nice
+introduction about how to use it with databases.
 }
 \note{
 The author would like to thank Prof. Hadley Wickham who
 allowed the reutilisation of part of his code.
 }
 \examples{
-tablefreq(iris[,c(1:5)])
+tablefreq(iris)
 tablefreq(iris, c("Sepal.Length","Species"))
-a <- tablefreq(iris,freq=~Sepal.Length+Petal.Length)
-head(tablefreq(a, freq=~Sepal.Width))
+a <- tablefreq(iris,freq="Sepal.Length")
+tablefreq(a, freq="Sepal.Width")
 
-tt <- tablefreq(iris[,c(1:2,5)],freq=~Sepal.Width)
+library(dplyr)
+iris \%>\% tablefreq("Species")
 
-data <- iris[1:10,c(1:2,5)]
-chunk1 <- iris[c(11:20),]
-chunk2 <- iris[-c(1:20),]
-a <- tablefreq(data,freq=~Sepal.Width)
-a <- update(a,chunk1)
+tfq <- tablefreq(iris[,c(1:2,5)],freq="Sepal.Width")
+
+chunk1 <- iris[1:10,c(1:2,5)]
+chunk2 <- iris[c(11:20),]
+chunk3 <- iris[-c(1:20),]
+a <- tablefreq(chunk1,freq="Sepal.Width")
 a <- update(a,chunk2)
-all.equal(a, tt)
+a <- update(a,chunk3)
+a
 
 \dontrun{
+
+## External databases
+library(dplyr)
+if(require(RSQLite)){
+  hflights_sqlite <- tbl(hflights_sqlite(), "hflights")
+  hflights_sqlite
+  tbl_vars(hflights_sqlite)
+  tablefreq(hflights_sqlite,vars=c("Year","Month"),freq="DayofMonth")
+}
+
 ##
 ## Graphs
 ##
@@ -134,8 +165,14 @@ if(require(ggplot2) && require(hflights)){
 }
 }
 }
+\references{
+Hadley Wickham. Count function
+\url{https://github.com/hadley/dplyr/issues/358} Hadley
+Wickham. Databases
+\url{http://cran.rstudio.com/web/packages/dplyr/vignettes/databases.html}
+}
 \seealso{
-\code{\link[plyr]{count}}
+\code{\link[plyr]{count}}, \code{\link[dplyr]{tbl}}
 }
 \keyword{manip}
 

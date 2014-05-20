@@ -1,37 +1,62 @@
 \name{statsfreq}
+\alias{.corfreq}
+\alias{.covfreq}
+\alias{.meanfreq}
+\alias{.quantilefreq}
+\alias{.scalefreq}
+\alias{.sdfreq}
 \alias{corfreq}
 \alias{covfreq}
 \alias{meanfreq}
 \alias{quantilefreq}
+\alias{scalefreq}
 \alias{sdfreq}
 \alias{statsfreq}
 \title{Descriptive statistics of a frequency table.}
 \usage{
-meanfreq(data, freq = ~freq)
+meanfreq(data, freq = NULL)
 
-quantilefreq(data, probs = c(0, 0.25, 0.5, 0.75, 1), freq = ~freq)
+.meanfreq(tfq)
 
-covfreq(data, freq = ~freq)
+quantilefreq(data, probs = c(0, 0.25, 0.5, 0.75, 1), freq = NULL)
 
-sdfreq(data, freq = ~freq)
+.quantilefreq(tfq, probs = c(0, 0.25, 0.5, 0.75, 1))
 
-corfreq(data, freq = ~freq)
+covfreq(data, freq = NULL)
+
+.covfreq(tfq)
+
+sdfreq(data, freq = NULL)
+
+.sdfreq(tfq)
+
+scalefreq(data, freq = NULL)
+
+.scalefreq(tfq)
+
+corfreq(data, freq = NULL)
+
+.corfreq(tfq)
 }
 \arguments{
-  \item{data}{a data frame or matrix.}
+  \item{data}{any object that can be processed by
+  \code{link{tablefreq}}.}
 
-  \item{freq}{a one-sided, single term formula specifying
-  frequency weights. Default is \code{~freq}.}
+  \item{freq}{a single name of the variable specifying
+  frequency weights.}
 
   \item{probs}{A vector of quantiles to compute. Default is
   0 (min), .25, .5, .75, 1 (max).}
+
+  \item{tfq}{a \code{tablefreq} object, or a matrix, data
+  frame with the last column being the frequency wweights}
 }
 \value{
-\code{meanfreq} and \code{sdfreq} return scalars.
-\code{quantilefreq} returns a vector with the same length
-as \code{probs}. \code{covfreq} and \code{corfreq} the
-estimated covariance matrix and correlation matrix,
-respectively.
+\code{meanfreq} and \code{sdfreq} return vectors.
+\code{quantilefreq} returns a vector or matrix.
+\code{covfreq} and \code{corfreq} the estimated covariance
+matrix and correlation matrix, respectively.
+\code{scalefreq} return a data frame or matrix
 }
 \description{
 Computes the descriptive statistics of a frequency table.
@@ -50,22 +75,58 @@ the \code{pairwise.complete.obs} option of \code{cov} and
 Missing values or cases with non-positive frequency weights
 are automatically removed.
 
-Data set must contain the variables that compose the
-formula. These variables are removed from the data set in
-order to calculate the descriptive statistics.
+If \code{freq} is not null, the data set must contain a
+column with that name. These variable are removed from the
+data set in order to calculate the descriptive statistics.
+
+The dot versions are intented to be used when programing.
+The \code{tfq} may be a \code{tablefreq} object or a matrix
+or a data frame with the last column being the frequency
+weights.
 
 The algorithm of \code{quantilefreq} are based on
 \code{\link[Hmisc]{wtd.quantile}}.
+
+The intern functions are for programming purpose. It does
+not check the data.
 }
 \note{
 The author would like to thank Prof. Frank E. Harrell Jr.
 who allowed the reutilisation of part of his code.
 }
 \examples{
-df <- tablefreq(iris[, c("Sepal.Length","Petal.Length")])
-identical(meanfreq(df[,c(1,3)]), mean(iris[,1]))
-identical(sdfreq(df[,c(1,3)]), sd(iris[,c("Sepal.Length")]))
-all.equal(covfreq(df), cov(iris[,c("Sepal.Length","Petal.Length")],use="pairwise.complete.obs"))
+if(require(hflights)) {
+  meanfreq(hflights[,c("ArrDelay","DepDelay")])
+  sdfreq(hflights[,c("ArrDelay","DepDelay")])
+  corfreq(hflights[,c("ArrDelay","DepDelay")])
+}
+
+tfq <- tablefreq(iris$Sepal.Length)
+tfq
+
+meanfreq(iris$Sepal.Length)
+meanfreq(tfq,freq="freq")
+.meanfreq(tfq)
+
+dat <- iris[,1:4]
+quantilefreq(dat)
+corfreq(dat)
+
+tfq <- tablefreq(dat)
+.meanfreq(tfq)
+.quantilefreq(tfq)
+.corfreq(tfq)
+
+## dplyr integration
+library(dplyr)
+tfq  \%>\%
+  summarise( mean = .meanfreq(cbind(Sepal.Length,freq)),
+            sd = .sdfreq(cbind(Sepal.Length,freq)))
+
+tfq <- tablefreq(iris)
+tfq \%>\% group_by(Species) \%>\%
+  summarise( mean = .meanfreq(cbind(Sepal.Length,freq)),
+            sd = .sdfreq(cbind(Sepal.Length,freq)))
 }
 \references{
 Andrews, Chris,

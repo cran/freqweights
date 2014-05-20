@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-12 Sat 10:53 emilio on emilio-despacho>
+## Time-stamp: <2014-04-25 07:55 emilio on emilio-Satellite-P100>
 ## ============================================================
 
 ## ============================================================
@@ -24,8 +24,7 @@
 ##' @param input a length 1 character string. See Details. 
 ##' @param FUN any function applicated to each chunk 
 ##' @param chunksize number of lines for each chunk 
-##' @param verifylastrecord logical. In very rare cases, it is necessary to
-##' check whether the last chunk is correct. 
+##' 
 ##' @return A function with an logical argument, \code{reset}. If this argument
 ##' is \code{TRUE}, it indicates that the data should be reread from the
 ##' beginning by subsequent calls. When it reads all the data, it automatically
@@ -36,7 +35,7 @@
 ##' @keywords IO manip
 ##' @export
 ##' @import dplyr
-##' @importFrom data.table fread setnames
+##' @importFrom data.table fread
 ##' @importFrom plyr aaply adply alply daply ddply dlply laply ldply llply a_ply d_ply l_ply
 ##' @examples
 ##' 
@@ -73,7 +72,7 @@
 ##' }
 ##' all.equal(a, nrow(hflights))
 ##' }
-make.readchunk <- function(input, FUN=identity, chunksize=5000L,verifylastrecord=TRUE){
+make.readchunk <- function(input, FUN=identity, chunksize=5000L){
   ## Adapted from
   ## biglm::bigglm
   ##  ## https://github.com/RevolutionAnalytics/rhdfs/blob/master/pkg/inst/examples/biglm.integration.r
@@ -85,8 +84,9 @@ make.readchunk <- function(input, FUN=identity, chunksize=5000L,verifylastrecord
   if(chunksize < 2 && !verifylastrecord) {
     stop("make.readchunk: chunksize too small")
   }
+  verifylastrecord <- TRUE
   if(verifylastrecord) {
-    r <- data.table::fread(input,header=FALSE, select=1, showProgress=FALSE)
+    r <- data.table::fread(input, select=1, showProgress=FALSE)
     nrecords <- NROW(r)
   }
   f <- function(reset=FALSE){
@@ -101,7 +101,7 @@ make.readchunk <- function(input, FUN=identity, chunksize=5000L,verifylastrecord
       ## next chunk of data or NULL if no more data are available
       ## print(paste("file", input," nreadedlines", readedline))
       if(!done) {
-        r <- tbl_df(data.table::fread(input, header=FALSE,
+        r <- tbl_df(data.table::fread(input,
                                              skip = readedline,
                                              nrows = chunksize,
                                              showProgress=FALSE))

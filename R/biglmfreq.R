@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-11 vie 20:50 emilio on emilio-Satellite-P100>
+## Time-stamp: <2014-04-28 Mon 13:48 emilio on emilio-despacho>
 ## ============================================================
 
 ##' Estimates the coefficients of a linear model
@@ -16,35 +16,30 @@
 ##' @param formula a model formula
 ##' @param data data frame that must contain all variables in \code{formula}
 ##' and \code{freq} 
-##' @param freq a one-sided, single term formula specifying frequency weights
+##' @param freq a string of the variable specifying frequency weights
 ##' @return A \code{biglmfreq} object. 
 ##' @seealso \code{\link[biglm]{biglm}},  \code{\link{make.readchunk}}
 ##' @import biglm
 ##' @export
 ##' @examples
-##' ml <- lm(Sepal.Length ~ Sepal.Width, iris)
-##' tt <- tablefreq(iris[,c("Sepal.Length","Sepal.Width")])
-##' mt <- biglmfreq(Sepal.Length ~ Sepal.Width, tt)
-##' all.equal(coef(mt), coef(ml))
+##' mt <- biglmfreq(Sepal.Length ~ Sepal.Width, iris)
 ##' coef(mt)
-##' 
-##' chunk1 <- tt[1:30,]
-##' mf1 <- biglmfreq(Sepal.Length ~ Sepal.Width, chunk1)
 ##'
-##' chunk2 <- tt[-c(1:30),]
+##' chunk1 <- iris[1:30,]
+##' chunk2 <- iris[-c(1:30),]
+##' mf1 <- biglmfreq(Sepal.Length ~ Sepal.Width, chunk1)
 ##' mf2 <- update(mf1, chunk2)
 ##' 
-##' all.equal(coef(mf2), coef(ml))
-##' 
 ##' predict(mf2, iris)
-biglmfreq <- function(formula, data, freq = ~freq) {
+biglmfreq <- function(formula, data, freq = NULL) {
   cl <- match.call()
-  m <- biglm(formula=formula, data=data, weights=freq)
+  tfq <- tablefreq(data,vars=all.vars(formula), freq=freq)
+  weights <- formula(paste("~", attr(tfq,"colweights")))
+  m <- biglm(formula=formula, data=tfq, weights=weights)
+##  m <- biglm(formula=as.formula(formula), data=as.data.frame(tfq), weights=weights)
   ## yhat <- predict(m, data)
   ## residuals <- data[,all.vars(formula)[1] ] - yhat
-  w  <- model.frame(freq, data)[[1]]
-  ## m$ss <-  sum(residuals^2 * w)
-  m$N <- sum(w)
+  m$N <- evaldp(tfq, summarise, paste("N = sum(", attr(tfq,"colweights"),")"))[1,1]
   m$freq <- freq
   m$call <- cl
   class(m) <- "biglmfreq"
@@ -104,12 +99,13 @@ update.biglmfreq <- function (object, ...) {
   moredata <- list(...)[[1]]
   if(is.null(moredata)) return(object)
   ##print(class(object))
-  m <- update(object, moredata)
+  tfq <- tablefreq(moredata, vars=all.vars(object$terms), freq=object$freq)
+  m <- update(object, tfq)
   ## yhat <- predict(m, moredata)
   ##residuals <- moredata[,all.vars(m$terms)[1] ] - yhat
-  w  <- model.frame(m$weights, moredata)[[1]]
+  ##w  <- model.frame(m$weights, moredata)[[1]]
   ##m$ss <-  m$ss + sum(residuals^2 * w)
-  m$N <- N + sum(w)
+  m$N <- N + sum(tfq[,ncol(tfq)])
   m$freq <- freq
   class(m) <- c("biglmfreq")
   m

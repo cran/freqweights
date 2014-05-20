@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-10 jue 20:17 emilio on emilio-Satellite-P100>
+## Time-stamp: <2014-04-28 Mon 14:03 emilio on emilio-despacho>
 ## ============================================================
 
 ##' \code{lmfreq} is used to fit linear models with frequency tables
@@ -11,23 +11,33 @@
 ##' \code{\link[stats]{lm}} for further details.
 ##'
 ##' Any variables in the formula are removed from the data set.
+##'
+##' The dot function are for programming purpose. It does not check the data.
 ##' 
 ##' @aliases lmfreq AIC.lmfreq extractAIC.lmfreq logLik.lmfreq print.lmfreq
 ##' summary.lmfreq print.summary.lmfreq predict.lmfreq
 ##' @param formula an object of class \code{formula} 
 ##' @param data a data frame that must contain all variables present in
 ##' \code{formula} and \code{freq}
-##' @param freq a one-sided, single term formula specifying frequency weights
+##' @param freq a character string specifying the variable of  frequency weights
+##' @param tfq a \code{tablefreq} object
 ##' @return It returns an object of class \code{lmfreq}, very similar to \code{\link[stats]{lm}}
 ##' @export
 ##' @seealso \code{\link{tablefreq}}
 ##' @examples
+##'
+##' ## Benchmark
+##' if(require(hflights)){
+##'   formula <-  ArrDelay ~ DepDelay   
+##'   print(system.time(a <- lm(formula, data=hflights)))  ## ~0.4 seconds 
+##'   print(system.time(b <- lmfreq(formula, data=hflights))) ## ~0.12 seconds. 4x faster
+##' }
 ##' 
 ##' l0 <- lm(Sepal.Length ~ Sepal.Width,iris)
 ##' summary(l0)
 ##' 
-##' tt <- tablefreq(iris[,1:2])
-##' lf <- lmfreq(Sepal.Length ~ Sepal.Width,tt)
+##' tfq <- tablefreq(iris[,1:2])
+##' lf <- lmfreq(Sepal.Length ~ Sepal.Width,tfq, freq="freq")
 ##' summary(lf)
 ##' 
 ##' all.equal(coef(lf),coef(l0))
@@ -39,21 +49,56 @@
 ##' if(require(MASS)){
 ##'    stepAIC(lf)
 ##' }
-lmfreq<- function(formula, data, freq=~freq) {
+##' 
+##' system.time(lmfreq(Sepal.Length ~ Sepal.Width,tfq, freq="freq"))
+##' system.time(.lmfreq(Sepal.Length ~ Sepal.Width,tfq)) # Fast
+##'
+##' library(dplyr)
+##' igrouped <- iris %>% group_by(Species)
+##' models <- igrouped %>% do(model=lmfreq(Sepal.Length ~ Sepal.Width, .))
+##' coefs <- models %>%
+##'   do(cbind(as.data.frame(rbind(coef(.$model))),
+##'            Species=.$Species))
+##' coefs
+##' 
+##' \dontrun{
+##' ## If data is too granular, benchmark is worst
+##' n <- 10^6
+##' data <- data.frame(y=rnorm(n),x=rnorm(n))
+##' system.time(lm(y~x,data)) ## ~5 seconds
+##' system.time(lmfreq(y~x,data)) ## ~ 15 seconds
+##' system.time(tfq <- tablefreq(data)) ## ~ 5 seconds
+##' nrow(tfq) # same number of rows than original data
+##' system.time(.lmfreq(y~x,tfq)) ## ~ 10 seconds
+##' }
+lmfreq<- function(formula, data, freq=NULL) {
   cl <- match.call()
-  x <- as.data.frame(checkdatafreq(data, freq))
+  m <- .lmfreq(formula,
+                     tablefreq(data, vars=c(all.vars(formula), freq=freq)))
+  m$freq <- freq
+  m$call <- cl
+  m
+}
+
+##' @rdname lmfreq
+##' @export
+.lmfreq<- function(formula, tfq) {
+  cl <- match.call()
+   ## x <- as.data.frame(tablefreq(data, vars=c(all.vars(formula)), freq=freq))
+##  x <- as.data.frame(tablefreq(data, freq=freq))
   m <- do.call("lm", list(formula=formula,
-                          data=x,
-                          weights=x[,ncol(x)]))
+                          data=tfq,
+                          weights=tfq[,ncol(tfq)]))
   m <- m[c("coefficients", "rank", "assign",
            "xlevels", "terms", "qr",
            "residuals","weights",
            "model")]
-  m$freq <- freq
+  m$freq <- formula(paste("~", colnames(tfq)[ncol(tfq)]))
   m$call <- cl
   class(m) <- c("lmfreq")
   m
 }
+
 
 ## ============================================================
 ##
@@ -174,6 +219,15 @@ AIC.lmfreq <- function(object, ..., k=2){
   aic
 }
 
+
+##' @rdname lmfreq
+##' @method nobs lmfreq
+##' @importFrom stats nobs
+##' @export
+nobs.lmfreq <- function(object, ...) {
+##  print(paste("nobs.lmfreq ",sum(object$weights)))
+  sum(object$weights)
+}
 
 
 

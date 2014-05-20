@@ -1,8 +1,8 @@
 Package: freqweights
 Type: Package
 Title: Working with frequency tables
-Version: 0.0.1
-Date: 2014-04-03
+Version: 0.1.0
+Date: 2014-05-20
 Author: Emilio Torres-Manzanera
 Maintainer: Emilio Torres-Manzanera <torres@uniovi.es>
 Description: The frequency of a particular data value is the number of times it
@@ -11,9 +11,10 @@ Description: The frequency of a particular data value is the number of times it
     cases each case represents. This package provides some functions to work
     with such type of collected data.
 License: GPL-3
-Imports: plyr, data.table, dplyr, biglm, fastcluster
-Suggests: MASS, hflights, cluster, ggplot2
-Packaged: 2014-04-13 00:49:45 UTC; emilio
+Imports: plyr, dplyr (>= 0.2), data.table, biglm, fastcluster,
+        FactoMineR, stats
+Suggests: MASS, hflights, cluster, ggplot2, testthat, RSQLite
+Packaged: 2014-05-21 15:15:29 UTC; emilio
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-04-14 00:05:17
+Date/Publication: 2014-05-21 19:00:08

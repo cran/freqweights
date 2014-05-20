@@ -2,8 +2,7 @@
 \alias{make.readchunk}
 \title{Fast and friendly chunk file finagler}
 \usage{
-make.readchunk(input, FUN = identity, chunksize = 5000L,
-  verifylastrecord = TRUE)
+make.readchunk(input, FUN = identity, chunksize = 5000L)
 }
 \arguments{
   \item{input}{a length 1 character string. See Details.}
@@ -11,9 +10,6 @@ make.readchunk(input, FUN = identity, chunksize = 5000L,
   \item{FUN}{any function applicated to each chunk}
 
   \item{chunksize}{number of lines for each chunk}
-
-  \item{verifylastrecord}{logical. In very rare cases, it
-  is necessary to check whether the last chunk is correct.}
 }
 \value{
 A function with an logical argument, \code{reset}. If this

@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-13 Sun 02:45 emilio on emilio-despacho>
+## Time-stamp: <2014-04-18 Fri 22:12 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -37,7 +37,9 @@
 ##' 
 ##'   subclusters <- list(clus1, clus2)
 ##'   b <- claramerge(subclusters,k)
-##'   print(b$medoids)
+##'      print(b$medoids)
+##'
+##'    print(nrow(b$tablefreq))
 ##'   print(b$tablefreq)
 ##' }
 ##' @name clarachunk
@@ -71,7 +73,7 @@ claramerge <- function(subclusters, k, samples= 50){
   resample <- function(x) x$sample[ sample(seq_len(NROW(x$sample)), round( NROW(x$sample) * ratiosize), replace=TRUE),,drop=FALSE]
   clus <- clarasub( x=ldply(subclusters, resample), k=k, samples = samples)
   clus$n <- totalsize
-  clus$tablefreq <-  tablefreq(ldply(subclusters, function(x) x$tablefreq), freq=~freq)
+  clus$tablefreq <-  tablefreq(ldply(subclusters, function(x) x$tablefreq), freq="freq")
   clus
 }
 

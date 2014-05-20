@@ -1,21 +1,27 @@
 \name{lmfreq}
+\alias{.lmfreq}
 \alias{AIC.lmfreq}
 \alias{extractAIC.lmfreq}
 \alias{lmfreq}
 \alias{logLik.lmfreq}
+\alias{nobs.lmfreq}
 \alias{predict.lmfreq}
 \alias{print.lmfreq}
 \alias{print.summary.lmfreq}
 \alias{summary.lmfreq}
 \title{\code{lmfreq} is used to fit linear models with frequency tables}
 \usage{
-lmfreq(formula, data, freq = ~freq)
+lmfreq(formula, data, freq = NULL)
+
+.lmfreq(formula, tfq)
 
 \method{logLik}{lmfreq}(object, ...)
 
 \method{extractAIC}{lmfreq}(fit, scale = 0, k = 2, ...)
 
 \method{AIC}{lmfreq}(object, ..., k = 2)
+
+\method{nobs}{lmfreq}(object, ...)
 
 \method{summary}{lmfreq}(object, ...)
 
@@ -31,8 +37,10 @@ lmfreq(formula, data, freq = ~freq)
   \item{data}{a data frame that must contain all variables
   present in \code{formula} and \code{freq}}
 
-  \item{freq}{a one-sided, single term formula specifying
+  \item{freq}{a character string specifying the variable of
   frequency weights}
+
+  \item{tfq}{a \code{tablefreq} object}
 
   \item{object}{a \code{lmfreq} object}
 
@@ -60,13 +68,23 @@ It computes the linear model of a frequency table. See
 \code{\link[stats]{lm}} for further details.
 
 Any variables in the formula are removed from the data set.
+
+The dot function are for programming purpose. It does not
+check the data.
 }
 \examples{
+## Benchmark
+if(require(hflights)){
+  formula <-  ArrDelay ~ DepDelay
+  print(system.time(a <- lm(formula, data=hflights)))  ## ~0.4 seconds
+  print(system.time(b <- lmfreq(formula, data=hflights))) ## ~0.12 seconds. 4x faster
+}
+
 l0 <- lm(Sepal.Length ~ Sepal.Width,iris)
 summary(l0)
 
-tt <- tablefreq(iris[,1:2])
-lf <- lmfreq(Sepal.Length ~ Sepal.Width,tt)
+tfq <- tablefreq(iris[,1:2])
+lf <- lmfreq(Sepal.Length ~ Sepal.Width,tfq, freq="freq")
 summary(lf)
 
 all.equal(coef(lf),coef(l0))
@@ -77,6 +95,28 @@ predict(lf, newdata)
 
 if(require(MASS)){
    stepAIC(lf)
+}
+
+system.time(lmfreq(Sepal.Length ~ Sepal.Width,tfq, freq="freq"))
+system.time(.lmfreq(Sepal.Length ~ Sepal.Width,tfq)) # Fast
+
+library(dplyr)
+igrouped <- iris \%>\% group_by(Species)
+models <- igrouped \%>\% do(model=lmfreq(Sepal.Length ~ Sepal.Width, .))
+coefs <- models \%>\%
+  do(cbind(as.data.frame(rbind(coef(.$model))),
+           Species=.$Species))
+coefs
+
+\dontrun{
+## If data is too granular, benchmark is worst
+n <- 10^6
+data <- data.frame(y=rnorm(n),x=rnorm(n))
+system.time(lm(y~x,data)) ## ~5 seconds
+system.time(lmfreq(y~x,data)) ## ~ 15 seconds
+system.time(tfq <- tablefreq(data)) ## ~ 5 seconds
+nrow(tfq) # same number of rows than original data
+system.time(.lmfreq(y~x,tfq)) ## ~ 10 seconds
 }
 }
 \seealso{

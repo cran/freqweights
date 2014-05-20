@@ -6,7 +6,7 @@
 \alias{update.biglmfreq}
 \title{Estimates the coefficients of a linear model}
 \usage{
-biglmfreq(formula, data, freq = ~freq)
+biglmfreq(formula, data, freq = NULL)
 
 \method{coef}{biglmfreq}(object, ...)
 
@@ -22,8 +22,8 @@ biglmfreq(formula, data, freq = ~freq)
   \item{data}{data frame that must contain all variables in
   \code{formula} and \code{freq}}
 
-  \item{freq}{a one-sided, single term formula specifying
-  frequency weights}
+  \item{freq}{a string of the variable specifying frequency
+  weights}
 
   \item{object}{a \code{biglmfreq} object}
 
@@ -50,19 +50,13 @@ See Examples
 Examples
 }
 \examples{
-ml <- lm(Sepal.Length ~ Sepal.Width, iris)
-tt <- tablefreq(iris[,c("Sepal.Length","Sepal.Width")])
-mt <- biglmfreq(Sepal.Length ~ Sepal.Width, tt)
-all.equal(coef(mt), coef(ml))
+mt <- biglmfreq(Sepal.Length ~ Sepal.Width, iris)
 coef(mt)
 
-chunk1 <- tt[1:30,]
+chunk1 <- iris[1:30,]
+chunk2 <- iris[-c(1:30),]
 mf1 <- biglmfreq(Sepal.Length ~ Sepal.Width, chunk1)
-
-chunk2 <- tt[-c(1:30),]
 mf2 <- update(mf1, chunk2)
-
-all.equal(coef(mf2), coef(ml))
 
 predict(mf2, iris)
 }
