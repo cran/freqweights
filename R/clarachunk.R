@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-18 Fri 22:12 emilio on emilio-despacho>
+## Time-stamp: <2014-09-01 12:36 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -51,10 +51,17 @@ NULL
 ##' @export
 clarasub <- function(x, k, samples = 50){
   ## CPU time O( n * p * samplesize * samples). Storage O( n * p) + O( samplesize)
-  if(require("cluster")){
-  clus <- clara(x, k, samples = samples, rngR=TRUE, keep.data = FALSE)
-  return(list(n=NROW(x), sample=x[clus$sample,,drop=FALSE], medoids= clus$medoids, tablefreq=tablefreq(clus$clustering)))
-}
+##   if(require("cluster")){
+##   clus <- clara(x, k, samples = samples, rngR=TRUE, keep.data = FALSE)
+##   return(list(n=NROW(x), sample=x[clus$sample,,drop=FALSE], medoids= clus$medoids, tablefreq=tablefreq(clus$clustering)))
+## }
+  if (requireNamespace("cluster", quietly = TRUE)) {
+    clus <- cluster::clara(x, k, samples = samples, rngR=TRUE, keep.data = FALSE)
+    return(list(n=NROW(x), sample=x[clus$sample,,drop=FALSE], medoids= clus$medoids, tablefreq=tablefreq(clus$clustering)))
+  } else {
+      ## do something else not involving rgl.
+   }
+  
 }
 
 

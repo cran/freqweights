@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-28 Mon 14:00 emilio on emilio-despacho>
+## Time-stamp: <2014-08-04 21:08 emilio on emilio-Satellite-P100>
 ## ============================================================
 
 
@@ -28,6 +28,7 @@
 ##' \item{freq}{the weighting variable used to create the frequency table}
 ##' \item{colweights}{Name of the column with the weighting counts}
 ##' @note The author would like to thank Prof. Hadley Wickham who allowed the reutilisation of part of his code.
+##' When using the update function, be careful with non-integer weights: The precision of the final weights may be wrong due to the multiple sums.
 ##' @seealso \code{\link[plyr]{count}}, \code{\link[dplyr]{tbl}}
 ##' @keywords manip
 ##' @import dplyr
@@ -44,12 +45,12 @@
 ##' library(dplyr)
 ##' iris %>% tablefreq("Species")
 ##' 
-##' tfq <- tablefreq(iris[,c(1:2,5)],freq="Sepal.Width")
+##' tfq <- tablefreq(iris[,c(1:2)])
 ##'
-##' chunk1 <- iris[1:10,c(1:2,5)]
+##' chunk1 <- iris[1:10,c(1:2)]
 ##' chunk2 <- iris[c(11:20),]
 ##' chunk3 <- iris[-c(1:20),]
-##' a <- tablefreq(chunk1,freq="Sepal.Width")
+##' a <- tablefreq(chunk1)
 ##' a <- update(a,chunk2)
 ##' a <- update(a,chunk3)
 ##' a

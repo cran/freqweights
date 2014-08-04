@@ -1,5 +1,10 @@
 # -*- mode: org ; ispell-local-dictionary: "british" -*-  
 
+* freqweights 0.1.1
+
+- Solved the problem with the valgrind program in the test freqweights
+
+
 * freqweights 0.1.0
 
 - Now, it depends on dplyr 0.2
