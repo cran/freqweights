@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-05-10 09:06 emilio on emilio-Satellite-P100>
+## Time-stamp: <2014-10-09 10:16 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -54,7 +54,7 @@ pcafreq <- function(data, freq=NULL, scale.unit = TRUE, ncp = 5, quantisup = NUL
   PCA(tfq[, -ncol(tfq),drop=FALSE], scale.unit=scale.unit, ncp = ncp, ind.sup = NULL,
       quanti.sup = quanti.sup, 
       quali.sup = quali.sup,
-      row.w = tfq[,ncol(tfq)],
+      row.w = unlist(tfq[,ncol(tfq)]),
       col.w = col.w, graph = graph, axes = axes)
 } 
 

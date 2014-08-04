@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-08-04 21:08 emilio on emilio-Satellite-P100>
+## Time-stamp: <2014-10-09 09:38 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -8,7 +8,7 @@
 
 ##' Create a table of frequencies
 ##'
-##' Based on the \code{\link[plyr]{count}} function,
+##' Based on the \code{\link[dplyr]{count}} function,
 ##' it can also  work with matrices or external data bases and the result may be updated.
 ##'
 ##' It creates a frequency table of the \code{data}, or just of the columns specified in \code{vars}.

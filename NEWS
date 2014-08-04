@@ -1,5 +1,16 @@
 # -*- mode: org ; ispell-local-dictionary: "british" -*-  
 
+* freqweights 1.0.1
+
+** Public
+
+- Major changes due to the dependencies on dplyr 0.3
+
+** Internal
+
+- Removed Missing link or links in documentation object 'evaldp.Rd': ‘[dplyr]{manip}’
+- Added drop in .lmfreq
+
 * freqweights 0.1.1
 
 - Solved the problem with the valgrind program in the test freqweights

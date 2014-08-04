@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-28 Mon 14:05 emilio on emilio-despacho>
+## Time-stamp: <2014-10-09 10:31 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -138,9 +138,9 @@ quantilefreq <-  function(data, probs = c(0, 0.25, 0.5, 0.75, 1), freq = NULL){
                              else 2)),
                 "%", sep = "")
   result <- laply(seq_len(ncol(tfq)-1),function(i){
-    ok <- !is.na(tfq[,i]) & tfq[,ncol(tfq)]>0
-    x <- tfq[ok,i]
-    w <- tfq[ok,ncol(tfq)]
+    ok <- unlist(!is.na(tfq[,i]) & tfq[,ncol(tfq)]>0)
+    x <- unlist(tfq[ok,i])
+    w <- unlist(tfq[ok,ncol(tfq)])
     n <- sum(w)
     order <- 1 + (n - 1) * probs
     low <- pmax(floor(order), 1)

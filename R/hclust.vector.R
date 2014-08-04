@@ -38,5 +38,5 @@ hclustvfreq <- function(data, freq=NULL, method="single", metric= "euclidean", p
   if(!all(complete.cases(tfq)) ) {
     stop("hclustvfreq: Missing cases, or non-positive frequency weights!")
   }
-  hclust.vector(tfq[,-ncol(tfq),drop=FALSE], method=method, members=tfq[,ncol(tfq)], metric=metric, p=p)
+  hclust.vector(tfq[,-ncol(tfq),drop=FALSE], method=method, members=unlist(tfq[,ncol(tfq)]), metric=metric, p=p)
 }
