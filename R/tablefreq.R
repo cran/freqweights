@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-10-09 09:38 emilio on emilio-despacho>
+## Time-stamp: <2015-06-21 09:20 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -102,7 +102,7 @@
 ##'
 ##'   ## Density
 ##'   ## compute the relative frequencies for each group
-##'   td <- td %.% group_by(Origin) %.%
+##'   td <- td %>% group_by(Origin) %>%
 ##'                mutate( ngroup= sum(freq), wgroup= freq/ngroup)
 ##'   p <- ggplot() + geom_density(aes(x=TaxiIn, weight=wgroup, colour = Origin),
 ##'                                data = td)

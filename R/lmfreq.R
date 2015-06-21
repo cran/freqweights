@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-10-09 10:14 emilio on emilio-despacho>
+## Time-stamp: <2015-06-21 09:22 emilio on emilio-despacho>
 ## ============================================================
 
 ##' \code{lmfreq} is used to fit linear models with frequency tables
@@ -74,7 +74,7 @@
 lmfreq<- function(formula, data, freq=NULL) {
   cl <- match.call()
   m <- .lmfreq(formula,
-                     tablefreq(data, vars=c(all.vars(formula), freq=freq)))
+                     tablefreq(data, vars=c(all.vars(formula)), freq=freq))
   m$freq <- freq
   m$call <- cl
   m

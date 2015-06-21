@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-10 jue 17:01 emilio on emilio-Satellite-P100>
+## Time-stamp: <2015-06-21 09:20 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -80,13 +80,13 @@ preprocesshflights <- function(hflights){
 #####
   setnames(hflights,nams)
   ##print(colnames(hflights))
-  hflights %.% mutate(DepTime = ftime(DepTime),
-                      ArrTime = ftime(ArrTime)) %.%
+  hflights %>% mutate(DepTime = ftime(DepTime),
+                      ArrTime = ftime(ArrTime)) %>%
                         mutate(UniqueCarrier = ffactor( UniqueCarrier, listoflevels[["UniqueCarrier"]]),
                                Origin = ffactor( Origin, listoflevels[["Origin"]]),
                                Dest = ffactor( Dest, listoflevels[["Dest"]]),
                                CancellationCode = ffactor( CancellationCode, listoflevels[["CancellationCode"]])
-                               ) %.%
+                               ) %>%
                                  mutate(Year = as.integer(as.character(Year)),
                                         Month = as.integer(as.character(Month)),
                                         DayofMonth = as.integer(as.character(DayofMonth)),

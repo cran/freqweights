@@ -1,5 +1,16 @@
 # -*- mode: org ; ispell-local-dictionary: "british" -*-  
 
+* freqweights 1.0.2
+
+** Public
+
+- Changes in title
+
+** Private
+
+- Replaced %.% (deprecated) by %>%
+- Fixed bug in lmfreq
+
 * freqweights 1.0.1
 
 ** Public
