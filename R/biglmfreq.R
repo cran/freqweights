@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-04-28 Mon 13:48 emilio on emilio-despacho>
+## Time-stamp: <2017-04-18 17:24 emilio on emilio-despacho>
 ## ============================================================
 
 ##' Estimates the coefficients of a linear model
@@ -54,6 +54,7 @@ biglmfreq <- function(formula, data, freq = NULL) {
 ##' @export 
 ##' @import biglm
 ##' @rdname biglmfreq
+##' @importFrom stats coef
 ##' @export
 coef.biglmfreq <- function(object, ...) {
   class(object) <- "biglm"
@@ -65,6 +66,7 @@ coef.biglmfreq <- function(object, ...) {
 ##' @method predict biglmfreq
 ##' @import biglm
 ##' @rdname biglmfreq
+##' @importFrom stats predict
 ##' @export
 predict.biglmfreq <- function(object, ...) {
   newdata <- list(...)[[1]]
@@ -90,6 +92,7 @@ print.biglmfreq <- function (x, ...)
 ##' @method update biglmfreq
 ##' @import biglm
 ##' @rdname biglmfreq
+##' @importFrom stats update
 ##' @export
 update.biglmfreq <- function (object, ...) {
 ## Fromo update.biglm

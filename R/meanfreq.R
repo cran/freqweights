@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2014-10-09 10:31 emilio on emilio-despacho>
+## Time-stamp: <2017-04-18 17:20 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -128,6 +128,7 @@ quantilefreq <-  function(data, probs = c(0, 0.25, 0.5, 0.75, 1), freq = NULL){
 
 
 ##' @rdname statsfreq
+##' @importFrom stats approx
 ##' @export
 .quantilefreq <- function(tfq, probs = c(0, 0.25, 0.5, 0.75, 1)) {
    if (any(probs < 0 | probs > 1))
@@ -197,6 +198,7 @@ covfreq <- function(data, freq = NULL) {
 
 
 ##' @rdname statsfreq
+##' @importFrom stats complete.cases
 ##' @export
 .covfreq <- function(tfq){
   if( all(complete.cases(tfq)) ) {
@@ -302,6 +304,7 @@ corfreq <- function(data, freq = NULL){
 
 
 ##' @rdname statsfreq
+##' @importFrom stats complete.cases
 ##' @export
 .corfreq <- function(tfq){
   ncy <- ncx <- ncol(tfq) -1

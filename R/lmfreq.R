@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2015-06-21 09:22 emilio on emilio-despacho>
+## Time-stamp: <2017-04-18 17:26 emilio on emilio-despacho>
 ## ============================================================
 
 ##' \code{lmfreq} is used to fit linear models with frequency tables
@@ -233,6 +233,7 @@ nobs.lmfreq <- function(object, ...) {
 
 ##' @rdname lmfreq
 ##' @method summary lmfreq
+##' @importFrom stats pt AIC
 ##' @export
 summary.lmfreq <- function (object, ...){
   beta <- coef(object)

@@ -1,6 +1,6 @@
 ## Emilio Torres Manzanera
 ## University of Oviedo
-## Time-stamp: <2015-06-21 09:20 emilio on emilio-despacho>
+## Time-stamp: <2017-04-18 17:31 emilio on emilio-despacho>
 ## ============================================================
 
 
@@ -33,9 +33,6 @@
 ##' @keywords manip
 ##' @import dplyr
 ##' @export
-##' @references
-##' Hadley Wickham. Count function \url{https://github.com/hadley/dplyr/issues/358}
-##' Hadley Wickham. Databases \url{http://cran.rstudio.com/web/packages/dplyr/vignettes/databases.html}
 ##' @examples
 ##' tablefreq(iris)
 ##' tablefreq(iris, c("Sepal.Length","Species"))
@@ -217,7 +214,7 @@ update.tablefreq <- function(object, ...) {
     stop("update. Different colnames")
   }
   ## Now, join both data sets and calculate a new table of frequencies
-  x <- tablefreq(rbind_list(object, x[, colnames(object)]),
+  x <- tablefreq(bind_rows(object, x[, colnames(object)]),
                  freq=attr(object,"colweights"))
   ## Preserve the original formula freq
   attr(x, "freq") <- attr(object,"freq")
