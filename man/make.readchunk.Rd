@@ -74,4 +74,3 @@ all.equal(a, nrow(hflights))
 }
 \keyword{IO}
 \keyword{manip}
-

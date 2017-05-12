@@ -4,6 +4,9 @@
 \alias{biglmfreq}
 \alias{coef.biglmfreq}
 \alias{predict.biglmfreq}
+\alias{update.biglmfreq}
+\alias{coef.biglmfreq}
+\alias{predict.biglmfreq}
 \alias{print.biglmfreq}
 \alias{update.biglmfreq}
 \title{Estimates the coefficients of a linear model}
@@ -62,4 +65,3 @@ predict(mf2, iris)
 \seealso{
 \code{\link[biglm]{biglm}},  \code{\link{make.readchunk}}
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/freqweights-package.R
 \docType{package}
 \name{freqweights-package}
-\alias{freqweights}
 \alias{freqweights-package}
+\alias{freqweights}
 \title{Working with frequency tables}
 \description{
 The frequency of a particular data value is the number of times it occurs.
@@ -31,4 +31,3 @@ Emilio Torres-Manzanera
 Maintainer: Emilio Torres-Manzanera <torres@uniovi.es>
 }
 \keyword{package}
-

@@ -34,4 +34,3 @@ b
 \seealso{
 \code{\link[plyr]{round_any}}
 }
-

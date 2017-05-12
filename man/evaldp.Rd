@@ -32,4 +32,3 @@ iris \%>\% evaldp(arrange,"Sepal.Length") \%>\%
 \references{
 \url{https://gist.github.com/skranz/9681509}
 }
-

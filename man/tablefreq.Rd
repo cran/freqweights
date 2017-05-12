@@ -145,4 +145,3 @@ if(require(ggplot2) && require(hflights)){
 \code{\link[plyr]{count}}, \code{\link[dplyr]{tbl}}
 }
 \keyword{manip}
-

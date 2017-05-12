@@ -1,5 +1,11 @@
 # -*- mode: org ; ispell-local-dictionary: "british" -*-  
 
+* freqweights 1.0.4
+
+** Public
+
+- Removed clarasub
+
 * freqweights 1.0.3
 
 ** Public
